@@ -1,0 +1,68 @@
+<div class="notes-container">
+  <h2>{{ isEditing ? 'Edit Note' : 'Add a New Note' }}</h2>
+
+  <form (ngSubmit)="addNote()">
+    <input
+      type="text"
+      placeholder="Note Title"
+      [(ngModel)]="noteTitle"
+      name="title"
+      required
+      [readonly]="isEditing && isCheckedNote"
+    />
+    <textarea
+      rows="4"
+      placeholder="Note Content"
+      [(ngModel)]="noteContent"
+      name="content"
+      required
+      [readonly]="isEditing && isCheckedNote"
+    ></textarea>
+
+    <button type="submit" class="add-btn" [disabled]="isEditing && isCheckedNote">
+      {{ isEditing ? 'Update Note' : 'Add Note' }}
+    </button>
+  </form>
+
+  <input
+    type="text"
+    placeholder="Search notes..."
+    [(ngModel)]="searchText"
+    class="search-input"
+    name="search"
+  />
+
+  <div *ngIf="filteredNotes.length > 0" class="notes-list">
+    <h3>Your notes</h3>
+    <br />
+    <div
+      *ngFor="let note of filteredNotes; let i = index"
+      class="note-card"
+      [class.checked]="note.checked"
+    >
+      <h4>{{ note.title }}</h4>
+      <p>{{ note.content }}</p>
+
+      <div class="note-footer">
+        <div class="checkbox-wrapper">
+          <input
+            type="checkbox"
+            [(ngModel)]="note.checked"
+            [name]="'checked' + i"
+            [id]="'check' + i"
+          />
+          <label [for]="'check' + i"><h5>Mark as Done</h5></label>
+        </div>
+
+        <div class="note-card-buttons">
+          <button (click)="editNote(i)" [disabled]="note.checked">✏️ Edit</button>
+          <button (click)="deleteNote(i)">🗑️ Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="filteredNotes.length === 0" class="empty-message">
+    <p>No matching notes found.</p>
+  </div>
+</div>
